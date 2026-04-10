@@ -156,3 +156,39 @@ class QuizGame:
         print("5. 종료")
         print("========================================")
         
+    
+   # 퀴즈 풀기 기능
+    def play_quiz(self):
+        # 퀴즈 목록이 비어 있으면 퀴즈를 진행할 수 없으므로 안내 메시지 출력
+        if not self.quizzes:
+            print("등록된 퀴즈가 없습니다.")
+            # 함수 종료
+            return
+
+        # 전체 퀴즈 개수를 보여주면서 퀴즈 시작 안내
+        print(f"\n 퀴즈를 시작합니다! (총 {len(self.quizzes)}문제)")
+       
+
+        # 퀴즈 목록을 처음부터 끝까지 하나씩 꺼내면서 반복
+        # index는 문제 번호, quiz는 Quiz 객체
+        for index, quiz in enumerate(self.quizzes, start=1):
+            print("----------------------------------------")
+            # 현재 문제와 선택지를 화면에 출력
+            quiz.display(index)
+            # 사용자가 정답 번호를 입력하도록 하고,
+            # 1~4 사이의 숫자만 허용하도록 처리
+            user_answer = self.get_int_input("정답 입력 (1-4): ", 1, 4)
+            
+            # 사용자가 입력한 답이 정답인지 확인
+            if quiz.is_correct(user_answer):
+                print("정답입니다!")
+            
+            else:
+                # 오답일 경우 실제 정답 번호에 해당하는 선택지 내용을 가져옴
+                # quiz.answer는 1부터 시작하므로 리스트 인덱스에 맞게 -1 해줌
+                correct_answer_text = quiz.choices[quiz.answer - 1]
+                print(f" 오답입니다. 정답은 {quiz.answer}번 ({correct_answer_text}) 입니다.")
+        
+       
+
+        print("========================================")
