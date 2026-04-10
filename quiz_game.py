@@ -156,4 +156,104 @@ class QuizGame:
         print("5. 종료")
         print("========================================")
         
-    
+    # 퀴즈 풀기 기능
+    def play_quiz(self):
+        # 퀴즈 목록이 비어 있으면 퀴즈를 진행할 수 없으므로 안내 메시지 출력
+        if not self.quizzes:
+            print("등록된 퀴즈가 없습니다.")
+            # 함수 종료
+            return
+
+        # 전체 퀴즈 개수를 보여주면서 퀴즈 시작 안내
+        print(f"\n 퀴즈를 시작합니다! (총 {len(self.quizzes)}문제)")
+        # 맞힌 문제 수를 저장할 변수
+        score = 0
+
+        # 퀴즈 목록을 처음부터 끝까지 하나씩 꺼내면서 반복
+        # index는 문제 번호, quiz는 Quiz 객체
+        for index, quiz in enumerate(self.quizzes, start=1):
+            print("----------------------------------------")
+            # 현재 문제와 선택지를 화면에 출력
+            quiz.display(index)
+            # 사용자가 정답 번호를 입력하도록 하고,
+            # 1~4 사이의 숫자만 허용하도록 처리
+            user_answer = self.get_int_input("정답 입력 (1-4): ", 1, 4)
+            
+            # 사용자가 입력한 답이 정답인지 확인
+            if quiz.is_correct(user_answer):
+                print("정답입니다!")
+                # 맞힌 개수 1 증가
+                score += 1
+            else:
+                # 오답일 경우 실제 정답 번호에 해당하는 선택지 내용을 가져옴
+                # quiz.answer는 1부터 시작하므로 리스트 인덱스에 맞게 -1 해줌
+                correct_answer_text = quiz.choices[quiz.answer - 1]
+                print(f" 오답입니다. 정답은 {quiz.answer}번 ({correct_answer_text}) 입니다.")
+        
+        # 전체 퀴즈가 끝난 뒤 점수를 백분율로 계산
+        final_score = int((score / len(self.quizzes)) * 100)
+        print("========================================")
+        # 최종 결과 출력
+        print(f"결과: {len(self.quizzes)}문제 중 {score}문제 정답! ({final_score}점)")
+
+        # 이번 점수가 기존 최고 점수보다 높으면 최고 점수 갱신
+        if final_score > self.best_score:
+            # 최고 점수를 현재 점수로 변경
+            self.best_score = final_score
+            # 변경된 최고 점수를 state.json에 저장
+            self.save_state()
+            # 새로운 최고 점수라는 메시지 출력
+            print("새로운 최고 점수입니다!")
+
+        print("========================================")
+
+    # 새로운퀴즈를 추가하는 함수
+    def add_quiz(self):
+        print("\n새로운 퀴즈를 추가합니다.")
+
+        try:
+            # 사용자에게 문제를 입력받고 앞뒤 공백을 제거함
+            question = input("문제를 입력하세요: ").strip()
+            
+            # 문제가 비어 있으면 다시 입력받음
+            while question == "":
+                print("문제는 비워둘 수 없습니다.")
+                question = input("문제를 입력하세요: ").strip()
+
+            # 선택지 4개를 저장할 리스트 생성
+            choices = []
+            
+            # 1번부터 4번까지 선택지를 입력받기 위해 반복
+            for i in range(1, 5):
+                # 각 선택지를 입력받고 앞뒤 공백 제거
+                choice = input(f"선택지 {i}: ").strip()
+                # 선택지가 비어 있으면 다시 입력받음
+                while choice == "":
+                    print("선택지는 비워둘 수 없습니다.")
+                    choice = input(f"선택지 {i}: ").strip()
+                # 입력받은 선택지를 리스트에 추가
+                choices.append(choice)
+
+            # 정답 번호를 입력받음
+            # 1부터 4 사이의 숫자만 입력 가능하도록 처리
+            answer = self.get_int_input("정답 번호 (1-4): ", 1, 4)
+
+            # 입력받은 문제, 선택지, 정답 번호를 이용해 새 Quiz 객체 생성
+            new_quiz = Quiz(question, choices, answer)
+            # 생성한 퀴즈를 전체 퀴즈 목록에 추가
+            self.quizzes.append(new_quiz)
+            # 추가된 퀴즈를 state.json 파일에 저장
+            self.save_state()
+
+            print("퀴즈가 추가되었습니다!")
+        
+        # 사용자가 Ctrl + C를 눌러 입력을 중단한 경우 처리
+        except KeyboardInterrupt:
+            print("\n퀴즈 추가가 중단되었습니다.")
+            # 중단되더라도 현재 상태를 저장
+            self.save_state()
+        # 입력 스트림이 종료된 경우 처리
+        except EOFError:
+            print("\n퀴즈 추가가 종료되었습니다.")
+            # 종료 전 현재 상태를 저장
+            self.save_state()
