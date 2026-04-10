@@ -156,6 +156,7 @@ class QuizGame:
         print("5. 종료")
         print("========================================")
         
+    
     # 퀴즈 풀기 기능
     def play_quiz(self):
         # 퀴즈 목록이 비어 있으면 퀴즈를 진행할 수 없으므로 안내 메시지 출력
@@ -166,8 +167,6 @@ class QuizGame:
 
         # 전체 퀴즈 개수를 보여주면서 퀴즈 시작 안내
         print(f"\n 퀴즈를 시작합니다! (총 {len(self.quizzes)}문제)")
-        # 맞힌 문제 수를 저장할 변수
-        score = 0
 
         # 퀴즈 목록을 처음부터 끝까지 하나씩 꺼내면서 반복
         # index는 문제 번호, quiz는 Quiz 객체
@@ -182,27 +181,15 @@ class QuizGame:
             # 사용자가 입력한 답이 정답인지 확인
             if quiz.is_correct(user_answer):
                 print("정답입니다!")
-                # 맞힌 개수 1 증가
-                score += 1
+             
             else:
                 # 오답일 경우 실제 정답 번호에 해당하는 선택지 내용을 가져옴
                 # quiz.answer는 1부터 시작하므로 리스트 인덱스에 맞게 -1 해줌
                 correct_answer_text = quiz.choices[quiz.answer - 1]
                 print(f" 오답입니다. 정답은 {quiz.answer}번 ({correct_answer_text}) 입니다.")
         
-        # 전체 퀴즈가 끝난 뒤 점수를 백분율로 계산
-        final_score = int((score / len(self.quizzes)) * 100)
         print("========================================")
         # 최종 결과 출력
         print(f"결과: {len(self.quizzes)}문제 중 {score}문제 정답! ({final_score}점)")
-
-        # 이번 점수가 기존 최고 점수보다 높으면 최고 점수 갱신
-        if final_score > self.best_score:
-            # 최고 점수를 현재 점수로 변경
-            self.best_score = final_score
-            # 변경된 최고 점수를 state.json에 저장
-            self.save_state()
-            # 새로운 최고 점수라는 메시지 출력
-            print("새로운 최고 점수입니다!")
 
         print("========================================")
