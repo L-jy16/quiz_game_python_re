@@ -257,3 +257,56 @@ class QuizGame:
             print("\n퀴즈 추가가 종료되었습니다.")
             # 종료 전 현재 상태를 저장
             self.save_state()
+
+    # 퀴즈 목록을 출력
+    def show_quiz_list(self):
+        # 퀴즈가 하나도 없을 경우 안내 메시지 출력 후 종료
+        if not self.quizzes:
+            print("등록된 퀴즈가 없습니다.")
+            return
+
+        # 현재 저장된 퀴즈 개수와 함께 출력
+        print(f"\n등록된 퀴즈 목록 (총 {len(self.quizzes)}개)")
+        print("----------------------------------------")
+        
+        #퀴즈 목록으 하나씩 반복하면서 문제 출력
+        # i는 번호 quiz는 Quiz 객체 
+        for i, quiz in enumerate(self.quizzes, start=1):
+            print(f"[{i}] {quiz.question}")
+        print("----------------------------------------")
+
+    # 최고 점수를 출력
+    def show_best_score(self):
+        # 최고 저수가 없는 경우
+        if self.best_score == 0:
+            print("아직 기록된 최고 점수가 없습니다.")
+        else:
+            # 최고 점수가 있는 경우
+            print(f"최고 점수: {self.best_score}점")
+
+    # 프로그램의 전체 실행 흐름 담당
+    def run(self):
+        
+        # 프로그램 종료될 때까지 반복
+        while True:
+            # 메뉴 화면 출력
+            self.show_menu()
+            # 사용자에게 메뉴 번호 입력받기
+            choice = self.get_int_input("선택: ", 1, 5)
+
+            # 사용자가 선택한 번호에 따라 퀴즈 풀기, 퀴즈 추가, 퀴즈 목록 풀기, 최고 점수 보기, 종료 중에 실행
+            if choice == 1:
+                self.play_quiz()
+            elif choice == 2:
+                self.add_quiz()
+            elif choice == 3:
+                self.show_quiz_list()
+            elif choice == 4:
+                self.show_best_score()
+            elif choice == 5:
+                # 종료 전 현재 데이터 저장
+                self.save_state()
+                # 반복문 종료 및 프로그램 끝
+                print("프로그램을 종료합니다.")
+                break
+            
