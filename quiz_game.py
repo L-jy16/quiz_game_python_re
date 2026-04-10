@@ -69,3 +69,26 @@ class QuizGame:
             print("기본 퀴즈로 시작합니다.")
             self.quizzes = self.get_default_quizzes()
             self.best_score = 0
+            
+    def save_state(self):
+        # 저장할 데이터 만들기
+        data = {
+            # .to_dict() = 객체를 딕셔너리로 변환하는 병령어
+            # self.quizzes = 퀴즈 객체 리스트, quiz = Quiz 객체
+            "quizzes": [quiz.to_dict() for quiz in self.quizzes],
+            "best_score": self.best_score
+        }
+
+        try:
+            # 파일 열기
+            # with를 쓰는 이유는 자동으로 파일이 닫히기 때문
+            
+            with open(self.state_file, "w", encoding="utf-8") as file:
+                # json.dump = 파이썬을 JSON으로 변환에서 파일에 저장
+                # ensure_ascii=False = 한글 안 깨지게 만듦
+                # indent=2 = 줄을 맞춤
+                json.dump(data, file, ensure_ascii=False, indent=2)
+                
+        # 저장 중 문제 생기면 프로그램 안 죽고 에러메시자 출력
+        except Exception as error:
+            print(f"파일 저장 중 오류가 발생했습니다: {error}")
