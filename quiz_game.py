@@ -13,7 +13,7 @@ class QuizGame:
         # 최고 점수 저장 변수
         self.best_score = 0
         
-       # 프로그램 실행 시 데이터 불러오기
+        # 프로그램 실행 시 데이터 불러오기
         self.load_state()
 
     # json 안에 내용이 없을 경우를 위한 기본 데이터
@@ -44,7 +44,7 @@ class QuizGame:
             # 퀴즈가 엇으면 기본 데이터 불러와서 사용
             if not self.quizzes:
                 print("저장된 퀴즈가 없어 기본 퀴즈를 불러옵니다.")
-                self.quizzes = self.get_default_quizzes() 
+                self.quizzes = self.get_default_quizzes()
                 self.save_state()
             else:
                 print(f"저장된 데이터를 불러왔습니다. (퀴즈 {len(self.quizzes)}개, 최고점수 {self.best_score}점)")
@@ -69,7 +69,7 @@ class QuizGame:
             print("기본 퀴즈로 시작합니다.")
             self.quizzes = self.get_default_quizzes()
             self.best_score = 0
-            
+
     def save_state(self):
         # 저장할 데이터 만들기
         data = {
@@ -144,6 +144,7 @@ class QuizGame:
                 # 프로그램 종료
                 raise SystemExit
             
+            
     # 메뉴 출력
     def show_menu(self):
         print("\n========================================")
@@ -155,7 +156,7 @@ class QuizGame:
         print("4. 점수 확인")
         print("5. 종료")
         print("========================================")
-        
+
     # 퀴즈 풀기 기능
     def play_quiz(self):
         # 퀴즈 목록이 비어 있으면 퀴즈를 진행할 수 없으므로 안내 메시지 출력
@@ -309,4 +310,3 @@ class QuizGame:
                 # 반복문 종료 및 프로그램 끝
                 print("프로그램을 종료합니다.")
                 break
-            
