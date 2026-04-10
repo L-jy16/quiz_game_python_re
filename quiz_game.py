@@ -44,7 +44,7 @@ class QuizGame:
             # 퀴즈가 엇으면 기본 데이터 불러와서 사용
             if not self.quizzes:
                 print("저장된 퀴즈가 없어 기본 퀴즈를 불러옵니다.")
-                self.quizzes = self.get_default_quizzes()
+                self.quizzes = self.get_default_quizzes() 
                 self.save_state()
             else:
                 print(f"저장된 데이터를 불러왔습니다. (퀴즈 {len(self.quizzes)}개, 최고점수 {self.best_score}점)")
@@ -92,3 +92,55 @@ class QuizGame:
         # 저장 중 문제 생기면 프로그램 안 죽고 에러메시자 출력
         except Exception as error:
             print(f"파일 저장 중 오류가 발생했습니다: {error}")
+            
+    # 숫자 입력을 안전하게 받기 위한 함수
+    # prompt = 사용자에게 보여줄 입력 문구
+    # min_value = 입력 가능한 최소값
+    # max_value = 입력 가능한 최대값
+    def get_int_input(self, prompt, min_value, max_value):
+        # 올바른 값을 입력할 때까지 계속 반복
+        while True:
+            try:
+                # 사용자 입력을 받고, 앞뒤 공백을 제거함
+                user_input = input(prompt).strip()
+
+                # 아무것도 입력하지 않고 엔터만 누른 경우 처리
+                if user_input == "":
+                    print("빈 입력은 허용되지 않습니다. 다시 입력하세요.")
+                    # 다시 입력받기 위해 반복문의 처음으로 돌아감
+                    continue
+                
+                # 입력값을 문자열에서 정수로 변환
+                number = int(user_input)
+
+                # 입력한 숫자가 허용 범위를 벗어난 경우 처리
+                if number < min_value or number > max_value:
+                    print(f"{min_value}부터 {max_value} 사이의 숫자를 입력하세요.")
+                    # 다시 입력받기 위해 반복문의 처음으로 돌아감
+                    continue
+                
+                # 위의 모든 조건을 통과하면 올바른 숫자이므로 반환
+                return number
+
+            # 문자를 입력해서 숫자로 변환할 수 없는 경우 처리
+            except ValueError:
+                print("숫자로 입력해야 합니다. 다시 입력하세요.")
+                
+            # 사용자가 Ctrl + C를 눌러 강제로 입력을 중단한 경우 처리
+            except KeyboardInterrupt:
+                print("\n입력이 중단되었습니다. 프로그램을 안전하게 종료합니다.")
+                # 종료 전에 현재 데이터를 저장
+                self.save_state()
+                # 프로그램 종료
+                raise SystemExit
+            
+            # 입력 스트림이 종료된 경우 처리
+            # 예: Ctrl + D 같은 입력 종료 상황
+            except EOFError:
+                print("\n입력 스트림이 종료되었습니다. 프로그램을 안전하게 종료합니다.")
+                # 종료 전에 현재 데이터를 저장
+                self.save_state()
+
+                # 프로그램 종료
+                raise SystemExit
+            
