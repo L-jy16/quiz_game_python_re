@@ -31,7 +31,8 @@ class QuizGame:
     def load_state(self):
         try:
             # state.json이 있을 경우에 state.json파일을 만듦
-            #encoding="utf-8"은 한글이 포함되어 있어도 깨지지 않도록 하기 위한 설정
+            # encoding="utf-8"은 한글이 포함되어 있어도 깨지지 않도록 하기 위한 설정
+            # save_state()에서 파일을 "w" 모드로 열어 현재 상태 전체를 json.dump()로 저장하는 방식으로 전체를 덮어쓰게 함
             with open(self.state_file, "r", encoding="utf-8") as file:
                 data = json.load(file)
 
