@@ -31,11 +31,13 @@ class QuizGame:
     def load_state(self):
         try:
             # state.json이 있을 경우에 state.json파일을 만듦
+            #encoding="utf-8"은 한글이 포함되어 있어도 깨지지 않도록 하기 위한 설정
             with open(self.state_file, "r", encoding="utf-8") as file:
                 data = json.load(file)
 
-            # JSON 데이터를 Quiz 객체로 변환
+            # quizzes가 존하면 값을 가져오고 없을 경우 빈 리스크 반환
             quizzes_data = data.get("quizzes", [])
+            # from_dict() = 딕셔너리 1개를 받아 Quiz 객체 1개로 바꿔준다.
             self.quizzes = [Quiz.from_dict(item) for item in quizzes_data]
             
             # 최고 점수 불러오기
